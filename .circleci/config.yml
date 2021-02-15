@@ -1,7 +1,19 @@
 version: 2.1
-orbs:
-  node: circleci/node@3.0.0
-workflows:
-  node-tests:
-    jobs:
-      - node/test
+jobs:
+  build:
+    docker:
+      -image:circleci/node:circleci/node@3.0.0
+    working_directory:
+
+    steps:
+	-checkout
+	-restore_cache:
+		keys:
+		-v1-dependencies-{{checksum "package.json"}}
+		-v1-dependencies-
+		-run:yam install
+		-save_cache:
+			paths:
+				-node_modules
+			key:v1-dependencies-{{checksum "package.json"}}
+		-run:yam test
